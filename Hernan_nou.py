@@ -52,7 +52,7 @@ def main():
         if hasattr(layer, "weight"):
             layers.append("features." + str(l))
 
-    carpeta_output = "input/"
+    carpeta_output = "XN_features_0_1/"
     patron_archivo = carpeta_output + "*.png"
     archivos_imagen = glob.glob(patron_archivo)
 
@@ -63,7 +63,7 @@ def main():
 
     for archivo_imagen in archivos_imagen:
         patch = cv2.imread(archivo_imagen)
-        neurona_interes = 0
+        neurona_interes = 3
 
         maxima_activacio_neurona_interes = diccionari['features.3']['Max Activations'][neurona_interes]
 
@@ -101,6 +101,11 @@ def main():
         if max_activation > max_activation_global:
             max_activation_global = max_activation
             neurona_interes_max = neurona_interes
+
+    # Guardar todos los resultados en el archivo de texto
+    with open('resultados.txt', 'w') as archivo_resultados:
+        for resultado in resultados:
+            archivo_resultados.write(resultado)
 
 if __name__ == '__main__':
     main()
