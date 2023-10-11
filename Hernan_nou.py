@@ -52,7 +52,7 @@ def main():
         if hasattr(layer, "weight"):
             layers.append("features." + str(l))
 
-    carpeta_output = "XN_features_0_1/"
+    carpeta_output = "prova/"
     patron_archivo = carpeta_output + "*.png"
     archivos_imagen = glob.glob(patron_archivo)
 
@@ -63,24 +63,24 @@ def main():
 
     for archivo_imagen in archivos_imagen:
         patch = cv2.imread(archivo_imagen)
-        neurona_interes = 3
+        neurona_interes = 45
 
         maxima_activacio_neurona_interes = diccionari['features.3']['Max Activations'][neurona_interes]
 
         posicio_im = diccionari['features.3']["position for the image"][0]
         tamany_im = diccionari['features.3']['Image size']
 
-        if tamany_im != patch.shape[0]:
-            diff = patch.shape[0] - tamany_im
-            start = diff // 2
-            end = start + tamany_im
-            patch_cropped = patch[start:end, start:end, :]
-            imatge = np.zeros((tamany_im, tamany_im, 3))
-            imatge[posicio_im:posicio_im+tamany_im, posicio_im:posicio_im+tamany_im, :] = patch_cropped
-        else:
-            imatge = np.copy(patch)
+        # Modifica l'imatge d'entrada a (224, 224, 3)
+        diff = patch.shape[0] - tamany_im
+        start = diff // 2
+        end = start + tamany_im
+        patch_cropped = patch[start:end, start:end, :]
+        imatge = np.zeros((224, 224, 3))
+        imatge[posicio_im:posicio_im+tamany_im, posicio_im:posicio_im+tamany_im, :] = patch_cropped
 
-        imatge = im.fromarray((imatge*255).astype(np.uint8))
+
+        imatge = im.fromarray(imatge.astype(np.uint8))
+        imatge.show()
         input = preproces_VGG16(imatge)
         input = torch.unsqueeze(input, 0)
 
